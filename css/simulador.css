@@ -1,0 +1,27 @@
+.escenario-tab {
+  display: flex;
+  gap: .5rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+.esc-btn {
+  padding: .4rem 1rem;
+  border-radius: 20px;
+  border: 1.5px solid var(--fo-border);
+  background: var(--fo-white);
+  font-size: .8rem;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--fo-text-secondary);
+  transition: var(--fo-transition);
+}
+.esc-btn.active {
+  background: var(--fo-primary);
+  border-color: var(--fo-primary);
+  color: #fff;
+}
+.compare-cell-h {
+  text-align: right;
+  font-family: var(--fo-font-mono);
+  font-size: .875rem;
+}

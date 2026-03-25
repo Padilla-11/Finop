@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinOp — Detalle de jornada</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="css/finop.css" rel="stylesheet">
+</head>
+<body>
+<div id="sidebar-root"></div>
+<main class="fo-main">
+  <div class="fo-topbar">
+    <div>
+      <h1 class="fo-page-title">Jornada del jueves 13 de marzo</h1>
+      <p class="fo-page-sub">Abierta 8:05 AM · Cerrada 10:48 PM · 14h 43min</p>
+    </div>
+    <div class="fo-topbar-actions">
+      <a href="historial.html" class="fo-btn fo-btn-ghost fo-btn-sm">← Volver al historial</a>
+      <button class="fo-btn fo-btn-outline fo-btn-sm" onclick="showModal('modal-correccion')">Solicitar corrección</button>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <!-- Indicadores y resultado -->
+    <div class="col-md-5">
+      <div class="fo-card" style="margin-bottom:1rem;">
+        <div class="fo-card-header"><div class="fo-card-title">Estado de resultados</div><span class="fo-badge fo-badge-success">Rentable</span></div>
+        <div class="fo-summary-row"><span class="s-label">Ingresos operativos</span><span class="s-value">$342.000</span></div>
+        <div class="fo-summary-row s-neg"><span class="s-label">Costo de lo vendido</span><span class="s-value">-$188.100</span></div>
+        <div class="fo-summary-row s-pos"><span class="s-label">Utilidad bruta</span><span class="s-value">$153.900</span></div>
+        <hr class="fo-divider" style="margin:.25rem 0;">
+        <div class="fo-summary-row s-neg"><span class="s-label">Gastos de la jornada</span><span class="s-value">-$47.500</span></div>
+        <div class="fo-summary-row s-neg"><span class="s-label">Costos fijos del día</span><span class="s-value">-$83.000</span></div>
+        <div class="fo-summary-row s-total s-pos"><span class="s-label">Utilidad neta</span><span class="s-value">$68.400</span></div>
+        <div class="fo-day-result rentable">
+          <span class="fo-day-result-icon">✅</span>
+          <div>
+            <div class="fo-day-result-title">Día rentable</div>
+            <div class="fo-day-result-sub">Superaste el punto de equilibrio por $62.000</div>
+          </div>
+        </div>
+      </div>
+      <div class="fo-card">
+        <div class="fo-card-header"><div class="fo-card-title">Reconciliación de caja</div></div>
+        <div class="fo-summary-row"><span class="s-label">Caja inicial</span><span class="s-value">$150.000</span></div>
+        <div class="fo-summary-row"><span class="s-label">Caja esperada</span><span class="s-value">$312.000</span></div>
+        <div class="fo-summary-row"><span class="s-label">Caja registrada</span><span class="s-value">$310.000</span></div>
+        <div class="fo-summary-row" style="border:none;"><span class="s-label">Diferencia</span><span class="s-value" style="color:var(--fo-warning);">-$2.000</span></div>
+      </div>
+    </div>
+
+    <!-- Movimientos y productos -->
+    <div class="col-md-7">
+      <div class="fo-card" style="margin-bottom:1rem;">
+        <div class="fo-tabs" id="tabs-detalle">
+          <button class="fo-tab active" data-tab-group="det" data-tab="mov" onclick="switchTab('det','mov')">Movimientos (6)</button>
+          <button class="fo-tab" data-tab-group="det" data-tab="prod" onclick="switchTab('det','prod')">Productos vendidos</button>
+          <button class="fo-tab" data-tab-group="det" data-tab="audit" onclick="switchTab('det','audit')">Auditoría</button>
+        </div>
+        <div class="fo-tab-content active" data-tab-content="det" data-tab="mov">
+          <div id="feed-detalle"></div>
+        </div>
+        <div class="fo-tab-content" data-tab-content="det" data-tab="prod">
+          <div class="fo-table-wrap" style="border:none;box-shadow:none;">
+            <table class="fo-table">
+              <thead><tr><th>Producto</th><th>Uds</th><th>Precio</th><th>Costo</th><th>Subtotal</th></tr></thead>
+              <tbody>
+                <tr><td>Arepa de huevo/td><td class="mono">18</td><td class="mono">$3.500</td><td class="mono">$1.200</td><td class="amount pos">$63.000</td></tr>
+                <tr><td>Papa rellena</td><td class="mono">12</td><td class="mono">$4.500</td><td class="mono">$1.600</td><td class="amount pos">$54.000</td></tr>
+                <tr><td>Café tinto</td><td class="mono">30</td><td class="mono">$2.000</td><td class="mono">$400</td><td class="amount pos">$60.000</td></tr>
+                <tr><td>Jugo de mora</td><td class="mono">15</td><td class="mono">$4.000</td><td class="mono">$1.000</td><td class="amount pos">$60.000</td></tr>
+                <tr><td>Empanada</td><td class="mono">35</td><td class="mono">$3.000</td><td class="mono">$900</td><td class="amount pos">$105.000</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="fo-tab-content" data-tab-content="det" data-tab="audit">
+          <div class="fo-empty">
+            <div class="fo-empty-icon">🔒</div>
+            <div class="fo-empty-text">Sin correcciones registradas.<br>Esta jornada no ha sido modificada.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Modal corrección -->
+<div class="fo-modal-overlay hidden" id="modal-correccion">
+  <div class="fo-modal">
+    <div class="fo-modal-header">
+      <div class="fo-modal-title">Solicitar corrección</div>
+      <button class="fo-close-btn" onclick="hideModal('modal-correccion')">✕</button>
+    </div>
+    <div class="fo-modal-body">
+      <div class="fo-alert warning" style="margin-bottom:1rem;">
+        <span class="fo-alert-icon">⚠️</span>
+        <div class="fo-alert-text fo-small">Cualquier cambio quedará registrado en el log de auditoría con tu usuario y la justificación.</div>
+      </div>
+      <div class="fo-form-group" style="margin-bottom:0;">
+        <label class="fo-label-text" for="just-text">Justificación <span class="fo-required">*</span></label>
+        <textarea class="fo-input fo-textarea" id="just-text" placeholder="Explica por qué necesitas corregir esta jornada..."></textarea>
+        <div class="fo-error-msg">La justificación es obligatoria.</div>
+      </div>
+    </div>
+    <div class="fo-modal-footer">
+      <button class="fo-btn fo-btn-ghost" onclick="hideModal('modal-correccion')">Cancelar</button>
+      <button class="fo-btn fo-btn-primary" onclick="solicitarCorreccion()">Continuar con la corrección</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/finop.js"></script>
+<script src="js/detalle-jornada.js"></script>
+</body></html>

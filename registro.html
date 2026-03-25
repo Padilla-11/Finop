@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinOp — Crear cuenta</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="css/finop.css" rel="stylesheet">
+</head>
+<body>
+<div class="fo-auth-wrap">
+  <div class="fo-auth-card" style="max-width:480px;">
+    <div class="fo-auth-logo">
+      <div class="fo-auth-logo-icon"><svg width="26" height="26" fill="none" stroke="#fff" viewBox="0 0 24 24" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div>
+      <div style="font-size:1.6rem;font-weight:700;color:var(--fo-primary);letter-spacing:-.02em;">FinOp</div>
+    </div>
+    <div class="fo-auth-title">Crea tu cuenta</div>
+    <div class="fo-auth-sub">Empieza a controlar las finanzas de tu negocio hoy</div>
+    <form id="register-form" novalidate>
+      <div class="fo-form-group">
+        <label class="fo-label-text" for="nombre">Nombre completo <span class="fo-required">*</span></label>
+        <input class="fo-input" type="text" id="nombre" placeholder="Tu nombre y apellido" autocomplete="name">
+        <div class="fo-error-msg">Ingresa tu nombre completo.</div>
+      </div>
+      <div class="fo-form-group">
+        <label class="fo-label-text" for="correo">Correo electrónico <span class="fo-required">*</span></label>
+        <input class="fo-input" type="email" id="correo" placeholder="tucorreo@ejemplo.com" autocomplete="email">
+        <div class="fo-error-msg">Ingresa un correo válido.</div>
+      </div>
+      <div class="row g-3">
+        <div class="col-6">
+          <div class="fo-form-group">
+            <label class="fo-label-text" for="pass1">Contraseña <span class="fo-required">*</span></label>
+            <input class="fo-input" type="password" id="pass1" placeholder="Mínimo 8 caracteres">
+            <div class="fo-error-msg" id="pass1-err">Mínimo 8 caracteres.</div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="fo-form-group">
+            <label class="fo-label-text" for="pass2">Confirmar <span class="fo-required">*</span></label>
+            <input class="fo-input" type="password" id="pass2" placeholder="Repite la contraseña">
+            <div class="fo-error-msg" id="pass2-err">Las contraseñas no coinciden.</div>
+          </div>
+        </div>
+      </div>
+      <div id="strength-wrap" style="margin-top:-.5rem;margin-bottom:1rem;display:none;">
+        <div class="fo-progress-wrap" style="height:4px;"><div class="fo-progress-bar" id="strength-bar" style="width:0%;transition:width .3s,background .3s;"></div></div>
+        <div class="fo-hint" id="strength-lbl"></div>
+      </div>
+      <div class="fo-form-group" style="margin-bottom:1.5rem;">
+        <label class="fo-check-label" style="align-items:flex-start;gap:.625rem;">
+          <input type="checkbox" id="terminos" style="margin-top:2px;">
+          <span>Acepto los <a href="#">términos de uso</a> y la <a href="#">política de privacidad</a>.</span>
+        </label>
+        <div class="fo-error-msg" id="term-err" style="display:none;">Debes aceptar los términos.</div>
+      </div>
+      <button type="submit" class="fo-btn fo-btn-accent fo-btn-lg fo-btn-block" id="btn-reg">Crear cuenta gratis</button>
+    </form>
+    <hr class="fo-divider">
+    <p class="text-center fo-small" style="margin:0;">¿Ya tienes cuenta? <a href="login.html" style="font-weight:500;">Iniciar sesión</a></p>
+  </div>
+</div>
+<script src="js/finop.js"></script>
+<script src="js/registro.js"></script>
+</body></html>

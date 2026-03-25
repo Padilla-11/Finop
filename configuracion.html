@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinOp — Configuración</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="css/finop.css" rel="stylesheet">
+</head>
+<body>
+<div id="sidebar-root"></div>
+<main class="fo-main">
+  <div class="fo-topbar">
+    <div><h1 class="fo-page-title">Configuración</h1><p class="fo-page-sub">Fritos y Fritos · Administra tu negocio</p></div>
+    <button class="fo-btn fo-btn-accent fo-btn-sm" id="btn-guardar-config" onclick="guardarConfig()">Guardar cambios</button>
+  </div>
+
+  <div class="fo-tabs" id="config-tabs">
+    <button class="fo-tab active"  data-tab-group="conf" data-tab="negocio"   onclick="switchTab('conf','negocio')">Negocio</button>
+    <button class="fo-tab"         data-tab-group="conf" data-tab="productos"  onclick="switchTab('conf','productos')">Productos</button>
+    <button class="fo-tab"         data-tab-group="conf" data-tab="costos"     onclick="switchTab('conf','costos')">Costos fijos</button>
+    <button class="fo-tab"         data-tab-group="conf" data-tab="nomina"     onclick="switchTab('conf','nomina')">Nómina</button>
+    <button class="fo-tab"         data-tab-group="conf" data-tab="categorias" onclick="switchTab('conf','categorias')">Categorías gastos</button>
+    <button class="fo-tab"         data-tab-group="conf" data-tab="usuarios"   onclick="switchTab('conf','usuarios')">Usuarios</button>
+  </div>
+
+  <!-- TAB: Negocio -->
+  <div class="fo-tab-content active" data-tab-content="conf" data-tab="negocio">
+    <div class="fo-card">
+      <div class="fo-card-header"><div class="fo-card-title">Datos del negocio</div></div>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="fo-form-group">
+            <label class="fo-label-text" for="neg-n">Nombre <span class="fo-required">*</span></label>
+            <input class="fo-input" type="text" id="neg-n" value="Fritos y Fritos">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="fo-form-group">
+            <label class="fo-label-text" for="neg-act">Tipo de actividad</label>
+            <select class="fo-input fo-select" id="neg-act">
+              <option selected>Alimentos y bebidas</option>
+              <option>Comercio al por menor</option>
+              <option>Servicios personales</option>
+              <option>Otro</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="fo-form-group">
+            <label class="fo-label-text" for="neg-fecha">Fecha de inicio</label>
+            <input class="fo-input" type="date" id="neg-fecha" value="2024-01-15">
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="fo-form-group" style="margin-bottom:0;">
+            <label class="fo-label-text">Días de operación semanal</label>
+            <div class="fo-day-check" id="dias-neg">
+              <div class="fo-day-btn selected" data-day="1">Lun</div>
+              <div class="fo-day-btn selected" data-day="2">Mar</div>
+              <div class="fo-day-btn selected" data-day="3">Mié</div>
+              <div class="fo-day-btn selected" data-day="4">Jue</div>
+              <div class="fo-day-btn selected" data-day="5">Vie</div>
+              <div class="fo-day-btn selected" data-day="6">Sáb</div>
+              <div class="fo-day-btn" data-day="7">Dom</div>
+            </div>
+            <div class="fo-hint">Actualmente: <strong>6 días/semana → ~26 días operativos por mes</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: Productos -->
+  <div class="fo-tab-content" data-tab-content="conf" data-tab="productos">
+    <div class="fo-card" style="padding:0;">
+      <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--fo-border-light);display:flex;align-items:center;justify-content:space-between;">
+        <div class="fo-card-title">Productos y servicios</div>
+        <button class="fo-btn fo-btn-primary fo-btn-sm" onclick="showModal('modal-prod-conf')">
+          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Agregar
+        </button>
+      </div>
+      <div class="fo-table-wrap" style="border:none;border-radius:0;box-shadow:none;">
+        <table class="fo-table">
+          <thead><tr><th>Producto</th><th>Categoría</th><th>Precio venta</th><th>Costo unit.</th><th>Margen</th><th>Estado</th><th></th></tr></thead>
+          <tbody id="prod-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: Costos fijos -->
+  <div class="fo-tab-content" data-tab-content="conf" data-tab="costos">
+    <div class="fo-card" style="padding:0;">
+      <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--fo-border-light);display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div class="fo-card-title">Costos fijos</div>
+          <div class="fo-card-subtitle">Total mensual: <strong id="total-fijos">$1.165.000</strong> · Equiv. diario: <strong id="total-fijos-dia">$44.808</strong></div>
+        </div>
+        <button class="fo-btn fo-btn-primary fo-btn-sm" onclick="showModal('modal-costo-conf')">+ Agregar</button>
+      </div>
+      <div class="fo-table-wrap" style="border:none;border-radius:0;box-shadow:none;">
+        <table class="fo-table">
+          <thead><tr><th>Nombre</th><th>Valor</th><th>Frecuencia</th><th>Equiv. diario</th><th></th></tr></thead>
+          <tbody id="costos-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: Nómina -->
+  <div class="fo-tab-content" data-tab-content="conf" data-tab="nomina">
+    <div class="fo-card" style="padding:0;">
+      <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--fo-border-light);display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div class="fo-card-title">Empleados</div>
+          <div class="fo-card-subtitle">Costo laboral diario total: <strong id="total-nomina-dia">$0</strong></div>
+        </div>
+        <button class="fo-btn fo-btn-primary fo-btn-sm" onclick="showModal('modal-emp-conf')">+ Agregar</button>
+      </div>
+      <div class="fo-table-wrap" style="border:none;border-radius:0;box-shadow:none;">
+        <table class="fo-table">
+          <thead><tr><th>Nombre</th><th>Cargo</th><th>Tipo pago</th><th>Valor</th><th>Costo/día</th><th></th></tr></thead>
+          <tbody id="emp-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: Categorías de gastos -->
+  <div class="fo-tab-content" data-tab-content="conf" data-tab="categorias">
+    <div class="fo-card">
+      <div class="fo-card-header">
+        <div>
+          <div class="fo-card-title">Categorías de gastos operativos</div>
+          <div class="fo-card-subtitle">Usadas para clasificar movimientos durante la jornada</div>
+        </div>
+        <button class="fo-btn fo-btn-primary fo-btn-sm" onclick="showModal('modal-cat-conf')">+ Agregar</button>
+      </div>
+      <div id="cats-list"></div>
+    </div>
+  </div>
+
+  <!-- TAB: Usuarios -->
+  <div class="fo-tab-content" data-tab-content="conf" data-tab="usuarios">
+    <div class="fo-card">
+      <div class="fo-card-header">
+        <div class="fo-card-title">Usuarios con acceso</div>
+        <button class="fo-btn fo-btn-primary fo-btn-sm" onclick="showModal('modal-usuario-conf')">+ Invitar</button>
+      </div>
+      <div id="usuarios-list">
+        <div style="display:flex;align-items:center;gap:1rem;padding:.875rem 0;border-bottom:1px solid var(--fo-border-light);">
+          <div class="fo-avatar fo-avatar-lg">JP</div>
+          <div style="flex:1;">
+            <div style="font-weight:500;">Juan Pérez</div>
+            <div class="fo-small">juan@arepasymas.com</div>
+          </div>
+          <span class="fo-badge fo-badge-primary">Propietario</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:1rem;padding:.875rem 0;">
+          <div class="fo-avatar fo-avatar-lg" style="background:var(--fo-secondary);">CM</div>
+          <div style="flex:1;">
+            <div style="font-weight:500;">Carlos Martínez</div>
+            <div class="fo-small">carlos@gmail.com</div>
+          </div>
+          <span class="fo-badge fo-badge-neutral">Operador</span>
+          <button class="fo-btn fo-btn-danger fo-btn-sm">Revocar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Modal producto config -->
+<div class="fo-modal-overlay hidden" id="modal-prod-conf">
+  <div class="fo-modal">
+    <div class="fo-modal-header"><div class="fo-modal-title">Agregar producto</div><button class="fo-close-btn" onclick="hideModal('modal-prod-conf')">✕</button></div>
+    <div class="fo-modal-body">
+      <div class="fo-form-group"><label class="fo-label-text" for="pc-nombre">Nombre <span class="fo-required">*</span></label><input class="fo-input" type="text" id="pc-nombre" placeholder="Nombre del producto"><div class="fo-error-msg">Requerido.</div></div>
+      <div class="row g-2">
+        <div class="col-6"><label class="fo-label-text" for="pc-precio">Precio de venta <span class="fo-required">*</span></label><div class="fo-input-prefix"><span class="fo-input-prefix-text">$</span><input class="fo-input" type="number" id="pc-precio" placeholder="0" min="0"></div></div>
+        <div class="col-6"><label class="fo-label-text" for="pc-costo">Costo unitario <span class="fo-required">*</span></label><div class="fo-input-prefix"><span class="fo-input-prefix-text">$</span><input class="fo-input" type="number" id="pc-costo" placeholder="0" min="0"></div></div>
+      </div>
+      <div class="fo-form-group" style="margin-top:.875rem;margin-bottom:0;"><label class="fo-label-text" for="pc-cat">Categoría</label><input class="fo-input" type="text" id="pc-cat" placeholder="Ej: Bebidas"></div>
+    </div>
+    <div class="fo-modal-footer"><button class="fo-btn fo-btn-ghost" onclick="hideModal('modal-prod-conf')">Cancelar</button><button class="fo-btn fo-btn-primary" onclick="addProducto()">Guardar</button></div>
+  </div>
+</div>
+
+<!-- Modal invitar usuario -->
+<div class="fo-modal-overlay hidden" id="modal-usuario-conf">
+  <div class="fo-modal">
+    <div class="fo-modal-header"><div class="fo-modal-title">Invitar usuario</div><button class="fo-close-btn" onclick="hideModal('modal-usuario-conf')">✕</button></div>
+    <div class="fo-modal-body">
+      <div class="fo-form-group"><label class="fo-label-text" for="u-correo">Correo electrónico <span class="fo-required">*</span></label><input class="fo-input" type="email" id="u-correo" placeholder="correo@ejemplo.com"><div class="fo-error-msg">Correo válido requerido.</div></div>
+      <div class="fo-form-group" style="margin-bottom:0;"><label class="fo-label-text" for="u-rol">Rol</label>
+        <select class="fo-input fo-select" id="u-rol">
+          <option value="operador">Operador — Solo registra jornadas</option>
+          <option value="propietario">Propietario — Acceso completo</option>
+        </select>
+        <div class="fo-hint" id="rol-hint">El operador puede abrir, registrar movimientos y cerrar jornadas, pero no ve los indicadores financieros.</div>
+      </div>
+    </div>
+    <div class="fo-modal-footer"><button class="fo-btn fo-btn-ghost" onclick="hideModal('modal-usuario-conf')">Cancelar</button><button class="fo-btn fo-btn-primary" onclick="invitarUsuario()">Enviar invitación</button></div>
+  </div>
+</div>
+
+<!-- Modal costo fijo -->
+<div class="fo-modal-overlay hidden" id="modal-costo-conf">
+  <div class="fo-modal">
+    <div class="fo-modal-header"><div class="fo-modal-title">Agregar costo fijo</div><button class="fo-close-btn" onclick="hideModal('modal-costo-conf')">✕</button></div>
+    <div class="fo-modal-body">
+      <div class="fo-form-group"><label class="fo-label-text" for="cf-nombre">Nombre <span class="fo-required">*</span></label><input class="fo-input" type="text" id="cf-nombre" placeholder="Ej: Arriendo local"><div class="fo-error-msg">Requerido.</div></div>
+      <div class="row g-2">
+        <div class="col-7"><label class="fo-label-text" for="cf-valor">Valor <span class="fo-required">*</span></label><div class="fo-input-prefix"><span class="fo-input-prefix-text">$</span><input class="fo-input" type="number" id="cf-valor" placeholder="0" min="0"></div><div class="fo-error-msg" id="cf-err">Requerido.</div></div>
+        <div class="col-5"><label class="fo-label-text" for="cf-freq">Frecuencia</label><select class="fo-input fo-select" id="cf-freq"><option value="mensual">Mensual</option><option value="semanal">Semanal</option><option value="diaria">Diaria</option></select></div>
+      </div>
+      <div class="fo-hint" style="margin-top:.5rem;">Equivalente diario: <strong id="cf-eq-prev">—</strong></div>
+    </div>
+    <div class="fo-modal-footer"><button class="fo-btn fo-btn-ghost" onclick="hideModal('modal-costo-conf')">Cancelar</button><button class="fo-btn fo-btn-primary" onclick="addCosto()">Guardar</button></div>
+  </div>
+</div>
+
+<!-- Modal empleado -->
+<div class="fo-modal-overlay hidden" id="modal-emp-conf">
+  <div class="fo-modal">
+    <div class="fo-modal-header"><div class="fo-modal-title">Agregar empleado</div><button class="fo-close-btn" onclick="hideModal('modal-emp-conf')">✕</button></div>
+    <div class="fo-modal-body">
+      <div class="fo-form-group"><label class="fo-label-text" for="emp-nombre">Nombre <span class="fo-required">*</span></label><input class="fo-input" type="text" id="emp-nombre" placeholder="Ej: Juan Pérez"><div class="fo-error-msg">Requerido.</div></div>
+      <div class="fo-form-group"><label class="fo-label-text" for="emp-cargo">Cargo</label><input class="fo-input" type="text" id="emp-cargo" placeholder="Ej: Cajera"></div>
+      <div class="row g-2">
+        <div class="col-6"><label class="fo-label-text" for="emp-tipo">Tipo de pago</label><select class="fo-input fo-select" id="emp-tipo"><option value="mensual">Mensual</option><option value="semanal">Semanal</option><option value="diaria">Diaria</option></select></div>
+        <div class="col-6"><label class="fo-label-text" for="emp-valor">Valor <span class="fo-required">*</span></label><div class="fo-input-prefix"><span class="fo-input-prefix-text">$</span><input class="fo-input" type="number" id="emp-valor" placeholder="0" min="0"></div><div class="fo-error-msg" id="emp-err">Requerido.</div></div>
+      </div>
+      <div class="fo-hint" style="margin-top:.5rem;">Costo diario estimado: <strong id="emp-eq-prev">—</strong></div>
+    </div>
+    <div class="fo-modal-footer"><button class="fo-btn fo-btn-ghost" onclick="hideModal('modal-emp-conf')">Cancelar</button><button class="fo-btn fo-btn-primary" onclick="addEmp()">Guardar</button></div>
+  </div>
+</div>
+
+<!-- Modal categoría -->
+<div class="fo-modal-overlay hidden" id="modal-cat-conf">
+  <div class="fo-modal">
+    <div class="fo-modal-header"><div class="fo-modal-title">Nueva categoría de gasto</div><button class="fo-close-btn" onclick="hideModal('modal-cat-conf')">✕</button></div>
+    <div class="fo-modal-body">
+      <div class="fo-form-group" style="margin-bottom:0;"><label class="fo-label-text" for="cat-nombre">Nombre <span class="fo-required">*</span></label><input class="fo-input" type="text" id="cat-nombre" placeholder="Ej: Publicidad"><div class="fo-error-msg">Requerido.</div></div>
+    </div>
+    <div class="fo-modal-footer"><button class="fo-btn fo-btn-ghost" onclick="hideModal('modal-cat-conf')">Cancelar</button><button class="fo-btn fo-btn-primary" onclick="addCategoria()">Guardar</button></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/finop.js"></script>
+<script src="js/configuracion.js"></script>
+</body></html>

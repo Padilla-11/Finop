@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinOp — Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="css/finop.css" rel="stylesheet">
+</head>
+<body>
+<div id="sidebar-root"></div>
+<main class="fo-main">
+  <!-- Topbar -->
+  <div class="fo-topbar">
+    <div>
+      <h1 class="fo-page-title">Dashboard</h1>
+      <p class="fo-page-sub" id="fecha-hoy">Cargando...</p>
+    </div>
+    <div class="fo-topbar-actions">
+      <button class="fo-btn fo-btn-accent" onclick="window.location.href='jornada-activa.html'">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+        Abrir jornada
+      </button>
+    </div>
+  </div>
+
+  <!-- Status bar -->
+  <div class="fo-status-bar closed" id="status-bar">
+    <div style="display:flex;align-items:center;gap:.625rem;">
+      <span class="fo-status-dot"></span>
+      <span>Sin jornada activa — Última jornada: <strong>ayer, 10:45 PM</strong></span>
+    </div>
+    <button class="fo-btn fo-btn-primary fo-btn-sm" onclick="window.location.href='jornada-activa.html'">Abrir jornada</button>
+  </div>
+
+  <!-- KPIs -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3 col-sm-6">
+      <div class="fo-kpi">
+        <div class="fo-kpi-label">Ingresos del mes</div>
+        <div class="fo-kpi-value" id="kpi-ingresos">$4.820.000</div>
+        <div class="fo-kpi-sub"><span class="fo-badge fo-badge-success">▲ 12%</span> vs mes anterior</div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="fo-kpi accent">
+        <div class="fo-kpi-label">Utilidad neta</div>
+        <div class="fo-kpi-value" id="kpi-utilidad" style="color:var(--fo-accent-dark)">$1.240.000</div>
+        <div class="fo-kpi-sub">Margen: <strong>25.7%</strong></div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="fo-kpi">
+        <div class="fo-kpi-label">Punto de equilibrio</div>
+        <div class="fo-kpi-value">18 / 22</div>
+        <div class="fo-kpi-sub" style="margin-bottom:.5rem;">Días superados este mes</div>
+        <div class="fo-progress-wrap"><div class="fo-progress-bar accent" style="width:82%"></div></div>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+      <div class="fo-kpi warning">
+        <div class="fo-kpi-label">Cuentas por cobrar</div>
+        <div class="fo-kpi-value" style="color:var(--fo-warning)" id="kpi-cobrar">$380.000</div>
+        <div class="fo-kpi-sub">3 clientes pendientes</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-8">
+      <div class="fo-card">
+        <div class="fo-card-header">
+          <div>
+            <div class="fo-card-title">Ingresos vs Gastos</div>
+            <div class="fo-card-subtitle">Últimos 14 días operativos</div>
+          </div>
+          <span class="fo-badge fo-badge-info">Marzo 2025</span>
+        </div>
+        <canvas id="chart-ingresos" height="90"></canvas>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="fo-card fo-chart-card">
+        <div class="fo-card-header">
+          <div>
+            <div class="fo-card-title">Margen de ganancia</div>
+            <div class="fo-card-subtitle">Evolución mensual</div>
+          </div>
+        </div>
+        <canvas id="chart-margen" height="170"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <!-- Alertas -->
+    <div class="col-md-7">
+      <div class="fo-card">
+        <div class="fo-card-header">
+          <div class="fo-card-title">Alertas activas</div>
+          <span class="fo-badge fo-badge-danger">2 críticas</span>
+        </div>
+        <div class="fo-alert danger">
+          <span class="fo-alert-icon">🔴</span>
+          <div class="fo-alert-text">
+            <div class="fo-alert-title">Racha negativa detectada</div>
+            Llevas 2 jornadas consecutivas sin superar el punto de equilibrio.
+          </div>
+        </div>
+        <div class="fo-alert warning">
+          <span class="fo-alert-icon">⚠️</span>
+          <div class="fo-alert-text">
+            <div class="fo-alert-title">Gastos inusuales esta semana</div>
+            Tus gastos operativos son 40% mayores que la semana pasada.
+          </div>
+        </div>
+        <div class="fo-alert info">
+          <span class="fo-alert-icon">ℹ️</span>
+          <div class="fo-alert-text">Tienes $380.000 en cuentas por cobrar con más de 7 días pendientes.
+            <a href="cuentas-cobrar.html" style="font-weight:500;margin-left:.375rem;">Ver cartera →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Acceso IA + resumen jornadas -->
+    <div class="col-md-5">
+      <div class="fo-card" style="margin-bottom:1rem;">
+        <div style="display:flex;align-items:center;gap:1rem;">
+          <div style="width:44px;height:44px;background:var(--fo-info-lt);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.3rem;">🤖</div>
+          <div style="flex:1;">
+            <div style="font-size:.9rem;font-weight:600;color:var(--fo-text);">Analizar negocio con IA</div>
+            <div class="fo-small">Último análisis: hace 5 días</div>
+          </div>
+          <button class="fo-btn fo-btn-primary fo-btn-sm" onclick="window.location.href='analisis.html'">Analizar →</button>
+        </div>
+      </div>
+      <div class="fo-card">
+        <div class="fo-card-header">
+          <div class="fo-card-title">Últimas jornadas</div>
+          <a href="historial.html" class="fo-small">Ver todo →</a>
+        </div>
+        <div id="ultimas-jornadas"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="js/finop.js"></script>
+<script src="js/dashboard.js"></script>
+</body></html>

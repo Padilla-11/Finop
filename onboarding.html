@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinOp — Configurar negocio</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="css/finop.css" rel="stylesheet">
+</head>
+<body>
+<div class="fo-onboard-wrap">
+  <header class="fo-onboard-header">
+    <div style="font-size:1.1rem;font-weight:700;color:var(--fo-primary);">FinOp</div>
+    <div class="fo-small">Configuración inicial — Paso <span id="step-num">1</span> de 3</div>
+    <a href="login.html" class="fo-small" style="color:var(--fo-text-muted);">Cancelar</a>
+  </header>
+  <div class="fo-onboard-body">
+    <div class="fo-onboard-card">
+      <div class="fo-step-pills" id="step-pills">
+        <div class="fo-step-pill active"></div>
+        <div class="fo-step-pill"></div>
+        <div class="fo-step-pill"></div>
+      </div>
+
+      <!-- Paso 1 -->
+      <div class="fo-step-content" id="step-1">
+        <div class="fo-onboard-step-title">Cuéntanos sobre tu negocio</div>
+        <div class="fo-onboard-step-sub">Esta información es obligatoria para comenzar a usar FinOp.</div>
+        <div class="fo-form-group">
+          <label class="fo-label-text" for="neg-nombre">Nombre del negocio <span class="fo-required">*</span></label>
+          <input class="fo-input" type="text" id="neg-nombre" placeholder="Ej: Fritos y Fritos">
+          <div class="fo-error-msg">Ingresa el nombre de tu negocio.</div>
+        </div>
+        <div class="fo-form-group">
+          <label class="fo-label-text" for="neg-actividad">Tipo de actividad económica</label>
+          <select class="fo-input fo-select" id="neg-actividad">
+            <option value="">Selecciona una categoría</option>
+            <option>Alimentos y bebidas</option>
+            <option>Comercio al por menor</option>
+            <option>Servicios personales</option>
+            <option>Manufactura artesanal</option>
+            <option>Servicios de transporte</option>
+            <option>Salud y belleza</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div class="fo-form-group">
+          <label class="fo-label-text" for="neg-fecha">Fecha de inicio de operaciones <span class="fo-required">*</span></label>
+          <input class="fo-input" type="date" id="neg-fecha">
+          <div class="fo-error-msg">Selecciona la fecha de inicio.</div>
+        </div>
+        <div class="fo-form-group" style="margin-bottom:0;">
+          <label class="fo-label-text">Días que opera tu negocio <span class="fo-required">*</span></label>
+          <div class="fo-hint" style="margin-bottom:.75rem;">Usamos esto para calcular el punto de equilibrio diario.</div>
+          <div class="fo-day-check" id="dias-check">
+            <div class="fo-day-btn selected" data-day="1">Lun</div>
+            <div class="fo-day-btn selected" data-day="2">Mar</div>
+            <div class="fo-day-btn selected" data-day="3">Mié</div>
+            <div class="fo-day-btn selected" data-day="4">Jue</div>
+            <div class="fo-day-btn selected" data-day="5">Vie</div>
+            <div class="fo-day-btn selected" data-day="6">Sáb</div>
+            <div class="fo-day-btn" data-day="7">Dom</div>
+          </div>
+          <div class="fo-error-msg" id="dias-error" style="display:none;">Selecciona al menos un día.</div>
+        </div>
+      </div>
+
+      <!-- Paso 2 -->
+      <div class="fo-step-content hidden" id="step-2">
+        <div class="fo-onboard-step-title">Agrega tu primer producto o servicio</div>
+        <div class="fo-onboard-step-sub">Necesitas al menos uno para realizar cierres de jornada.</div>
+        <div id="productos-list" style="margin-bottom:.75rem;"></div>
+        <button type="button" class="fo-btn fo-btn-outline fo-btn-sm" id="btn-add-prod">
+          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Agregar producto
+        </button>
+        <div class="fo-alert info" style="margin-top:1rem;">
+          <span class="fo-alert-icon">ℹ️</span>
+          <div class="fo-alert-text">El <strong>costo unitario</strong> debe incluir todos los insumos y materiales que uses para producir este ítem.</div>
+        </div>
+      </div>
+
+      <!-- Paso 3 -->
+      <div class="fo-step-content hidden" id="step-3">
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.25rem;">
+          <div class="fo-onboard-step-title" style="margin:0;">Costos fijos del negocio</div>
+          <span class="fo-badge fo-badge-neutral">Opcional</span>
+        </div>
+        <div class="fo-onboard-step-sub">Arriendos, servicios, nómina. El sistema calcula su equivalente diario automáticamente.</div>
+        <div id="costos-list" style="margin-bottom:.75rem;"></div>
+        <button type="button" class="fo-btn fo-btn-outline fo-btn-sm" id="btn-add-costo">
+          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Agregar costo fijo
+        </button>
+        <hr class="fo-divider">
+        <div class="fo-card" style="background:var(--fo-info-lt);border-color:var(--fo-surface-dark);">
+          <div style="font-size:.875rem;font-weight:500;color:var(--fo-primary);margin-bottom:.375rem;">¿Por qué registrar costos fijos?</div>
+          <div class="fo-small">Los necesitamos para calcular el <strong>punto de equilibrio diario</strong>: cuánto debes vender cada día para no perder dinero.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--fo-border-light);">
+        <button type="button" class="fo-btn fo-btn-ghost" id="btn-back" style="visibility:hidden;">← Atrás</button>
+        <button type="button" class="fo-btn fo-btn-primary" id="btn-next">Continuar →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal producto -->
+<div class="fo-modal-overlay hidden" id="modal-prod">
+  <div class="fo-modal">
+    <div class="fo-modal-header">
+      <div class="fo-modal-title" id="modal-prod-title">Agregar producto</div>
+      <button class="fo-close-btn" onclick="hideModal('modal-prod')">✕</button>
+    </div>
+    <div class="fo-modal-body">
+      <input type="hidden" id="prod-idx" value="-1">
+      <div class="fo-form-group">
+        <label class="fo-label-text" for="p-nombre">Nombre <span class="fo-required">*</span></label>
+        <input class="fo-input" type="text" id="p-nombre" placeholder="Ej: Arepa de choclo">
+        <div class="fo-error-msg">Requerido.</div>
+      </div>
+      <div class="row g-2">
+        <div class="col-6">
+          <label class="fo-label-text" for="p-precio">Precio de venta <span class="fo-required">*</span></label>
+          <div class="fo-input-prefix"><span class="fo-input-prefix-text">$</span><input class="fo-input" type="number" id="p-precio" placeholder="0" min="0"></div>
+          <div class="fo-error-msg" id="p-precio-err">Requerido.</div>
+        </div>
+        <div class="col-6">
+          <label class="fo-label-text" for="p-costo">Costo unitario <span class="fo-required">*</span></label>
+          <div class="fo-input-prefix"><span class="fo-input-prefix-text">$</span><input class="fo-input" type="number" id="p-costo" placeholder="0" min="0"></div>
+          <div class="fo-error-msg" id="p-costo-err">Requerido.</div>
+        </div>
+      </div>
+      <div class="fo-hint" style="margin-top:.5rem;">Margen estimado: <strong id="margen-prev">—</strong></div>
+      <div class="fo-form-group" style="margin-top:1rem;margin-bottom:0;">
+        <label class="fo-label-text" for="p-cat">Categoría</label>
+        <input class="fo-input" type="text" id="p-cat" placeholder="Ej: Bebidas, Alimentos...">
+      </div>
+    </div>
+    <div class="fo-modal-footer">
+      <button class="fo-btn fo-btn-ghost" onclick="hideModal('modal-prod')">Cancelar</button>
+      <button class="fo-btn fo-btn-primary" id="btn-save-prod">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal costo fijo -->
+<div class="fo-modal-overlay hidden" id="modal-costo">
+  <div class="fo-modal">
+    <div class="fo-modal-header">
+      <div class="fo-modal-title">Agregar costo fijo</div>
+      <button class="fo-close-btn" onclick="hideModal('modal-costo')">✕</button>
+    </div>
+    <div class="fo-modal-body">
+      <div class="fo-form-group">
+        <label class="fo-label-text" for="c-nombre">Nombre <span class="fo-required">*</span></label>
+        <input class="fo-input" type="text" id="c-nombre" placeholder="Ej: Arriendo local">
+        <div class="fo-error-msg">Requerido.</div>
+      </div>
+      <div class="row g-2">
+        <div class="col-7">
+          <label class="fo-label-text" for="c-valor">Valor <span class="fo-required">*</span></label>
+          <div class="fo-input-prefix"><span class="fo-input-prefix-text">$</span><input class="fo-input" type="number" id="c-valor" placeholder="0" min="0"></div>
+          <div class="fo-error-msg" id="c-valor-err">Requerido.</div>
+        </div>
+        <div class="col-5">
+          <label class="fo-label-text" for="c-freq">Frecuencia</label>
+          <select class="fo-input fo-select" id="c-freq"><option value="mensual">Mensual</option><option value="semanal">Semanal</option><option value="diaria">Diaria</option></select>
+        </div>
+      </div>
+      <div class="fo-hint" style="margin-top:.5rem;">Equivalente diario: <strong id="eq-prev">—</strong></div>
+    </div>
+    <div class="fo-modal-footer">
+      <button class="fo-btn fo-btn-ghost" onclick="hideModal('modal-costo')">Cancelar</button>
+      <button class="fo-btn fo-btn-primary" id="btn-save-costo">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/finop.js"></script>
+<script src="js/onboarding.js"></script>
+</body></html>

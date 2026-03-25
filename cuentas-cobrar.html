@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinOp — Cuentas por cobrar</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="css/finop.css" rel="stylesheet">
+</head>
+<body>
+<div id="sidebar-root"></div>
+<main class="fo-main">
+  <div class="fo-topbar">
+    <div><h1 class="fo-page-title">Cuentas por cobrar</h1><p class="fo-page-sub">Cartera pendiente de cobro · Fritos y Fritos</p></div>
+    <button class="fo-btn fo-btn-primary" onclick="showModal('modal-nueva')">
+      <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Nueva cuenta
+    </button>
+  </div>
+
+  <!-- KPIs -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3 col-6">
+      <div class="fo-kpi warning">
+        <div class="fo-kpi-label">Total por cobrar</div>
+        <div class="fo-kpi-value" style="color:var(--fo-warning);" id="kpi-total">$380.000</div>
+        <div class="fo-kpi-sub">Cartera activa</div>
+      </div>
+    </div>
+    <div class="col-md-3 col-6">
+      <div class="fo-kpi danger">
+        <div class="fo-kpi-label">Vencidas (+7 días)</div>
+        <div class="fo-kpi-value" style="color:var(--fo-danger);" id="kpi-vencidas">$220.000</div>
+        <div class="fo-kpi-sub">1 cuenta vencida</div>
+      </div>
+    </div>
+    <div class="col-md-3 col-6">
+      <div class="fo-kpi">
+        <div class="fo-kpi-label">Cobros del mes</div>
+        <div class="fo-kpi-value">$85.000</div>
+        <div class="fo-kpi-sub">1 cuenta cobrada</div>
+      </div>
+    </div>
+    <div class="col-md-3 col-6">
+      <div class="fo-kpi accent">
+        <div class="fo-kpi-label">Clientes activos</div>
+        <div class="fo-kpi-value" style="color:var(--fo-accent-dark);">4</div>
+        <div class="fo-kpi-sub">con saldo pendiente</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alerta vencimiento -->
+  <div class="fo-alert danger" style="margin-bottom:1.25rem;">
+    <span class="fo-alert-icon">🔴</span>
+    <div class="fo-alert-text">
+      <div class="fo-alert-title">Cuentas vencidas</div>
+      Pedro Gómez ($220.000) lleva 9 días sin pagar. Considera contactarlo hoy.
+    </div>
+  </div>
+
+  <!-- Tabla -->
+  <div class="fo-card" style="padding:0;">
+    <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--fo-border-light);display:flex;align-items:center;justify-content:space-between;">
+      <div class="fo-card-title">Detalle de cuentas</div>
+      <select class="fo-input fo-select" id="filtro-cc" style="width:auto;" onchange="renderCuentas()">
+        <option value="">Todos los estados</option>
+        <option value="pendiente">Pendientes</option>
+        <option value="cobrado_parcial">Cobro parcial</option>
+        <option value="cobrado">Cobradas</option>
+      </select>
+    </div>
+    <div class="fo-table-wrap" style="border:none;border-radius:0;box-shadow:none;">
+      <table class="fo-table">
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Descripción</th>
+            <th>Total</th>
+            <th>Cobrado</th>
+            <th>Pendiente</th>
+            <th>Días</th>
+            <th>Estado</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="cc-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- Modal nueva cuenta -->
+<div class="fo-modal-overlay hidden" id="modal-nueva">
+  <div class="fo-modal">
+    <div class="fo-modal-header">
+      <div class="fo-modal-title">Nueva venta a crédito</div>
+      <button class="fo-close-btn" onclick="hideModal('modal-nueva')">✕</button>
+    </div>
+    <div class="fo-modal-body">
+      <div class="fo-alert info" style="margin-bottom:1rem;">
+        <span class="fo-alert-icon">ℹ️</span>
+        <div class="fo-alert-text fo-small">Esta venta no afectará la caja hasta que se registre el cobro.</div>
+      </div>
+      <div class="fo-form-group">
+        <label class="fo-label-text" for="n-cliente">Nombre del cliente <span class="fo-required">*</span></label>
+        <input class="fo-input" type="text" id="n-cliente" placeholder="Nombre del cliente o empresa">
+        <div class="fo-error-msg">El nombre del cliente es requerido.</div>
+      </div>
+      <div class="fo-form-group">
+        <label class="fo-label-text" for="n-desc">Descripción</label>
+        <input class="fo-input" type="text" id="n-desc" placeholder="Ej: Pedido empresarial 40 arepas">
+      </div>
+      <div class="fo-form-group" style="margin-bottom:0;">
+        <label class="fo-label-text" for="n-monto">Monto total <span class="fo-required">*</span></label>
+        <div class="fo-input-prefix">
+          <span class="fo-input-prefix-text">$</span>
+          <input class="fo-input" type="number" id="n-monto" placeholder="0" min="1">
+        </div>
+        <div class="fo-error-msg" id="n-monto-err">Ingresa un monto válido.</div>
+      </div>
+    </div>
+    <div class="fo-modal-footer">
+      <button class="fo-btn fo-btn-ghost" onclick="hideModal('modal-nueva')">Cancelar</button>
+      <button class="fo-btn fo-btn-primary" onclick="guardarCuenta()">Registrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal registrar cobro -->
+<div class="fo-modal-overlay hidden" id="modal-cobro">
+  <div class="fo-modal">
+    <div class="fo-modal-header">
+      <div class="fo-modal-title" id="cobro-title">Registrar cobro</div>
+      <button class="fo-close-btn" onclick="hideModal('modal-cobro')">✕</button>
+    </div>
+    <div class="fo-modal-body">
+      <div class="fo-card" style="background:var(--fo-surface);border:none;margin-bottom:1rem;padding:.875rem 1rem;">
+        <div class="fo-summary-row" style="font-size:.875rem;"><span class="s-label">Deuda total</span><span class="s-value" id="cobro-total">—</span></div>
+        <div class="fo-summary-row" style="border:none;font-size:.875rem;"><span class="s-label">Ya cobrado</span><span class="s-value" style="color:var(--fo-accent-dark);" id="cobro-ya">—</span></div>
+      </div>
+      <div class="fo-form-group" style="margin-bottom:0;">
+        <label class="fo-label-text" for="cobro-monto">Monto a cobrar ahora <span class="fo-required">*</span></label>
+        <div class="fo-input-prefix">
+          <span class="fo-input-prefix-text">$</span>
+          <input class="fo-input" type="number" id="cobro-monto" placeholder="0" min="1">
+        </div>
+        <div class="fo-error-msg" id="cobro-err">Ingresa un monto válido.</div>
+      </div>
+    </div>
+    <div class="fo-modal-footer">
+      <button class="fo-btn fo-btn-ghost" onclick="hideModal('modal-cobro')">Cancelar</button>
+      <button class="fo-btn fo-btn-accent" id="btn-confirmar-cobro">Confirmar cobro</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/finop.js"></script>
+<script src="js/cuentas-cobrar.js"></script>
+</body></html>

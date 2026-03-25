@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinOp — Simulador</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="css/finop.css" rel="stylesheet">
+  <link href="css/simulador.css" rel="stylesheet">
+</head>
+<body>
+<div id="sidebar-root"></div>
+<main class="fo-main">
+  <div class="fo-topbar">
+    <div><h1 class="fo-page-title">Simulador financiero</h1><p class="fo-page-sub">Evalúa el impacto de tus decisiones antes de tomarlas · Base: últimos 30 días</p></div>
+    <button class="fo-btn fo-btn-outline fo-btn-sm" id="btn-guardar-esc" onclick="guardarEscenario()">
+      <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      Guardar escenario
+    </button>
+  </div>
+
+  <!-- Escenarios guardados -->
+  <div class="escenario-tab" id="escenarios-guardados">
+    <span class="fo-small" style="align-self:center;color:var(--fo-text-muted);">Escenarios:</span>
+    <button class="esc-btn active" onclick="cargarEscenario('base',this)">Base actual</button>
+    <button class="esc-btn" onclick="cargarEscenario('subir-precios',this)">Subir precios 10%</button>
+    <button class="esc-btn" onclick="cargarEscenario('abrir-domingo',this)">Abrir domingos</button>
+  </div>
+
+  <div class="row g-3">
+    <!-- Variables -->
+    <div class="col-md-5">
+      <div class="fo-card">
+        <div class="fo-card-header"><div class="fo-card-title">Variables del escenario</div><button class="fo-btn fo-btn-ghost fo-btn-sm" onclick="resetVariables()">Restablecer</button></div>
+
+        <div class="fo-sim-var">
+          <div class="fo-sim-var-header">
+            <span class="fo-sim-var-name">Precio promedio</span>
+            <span class="fo-sim-var-value" id="v-precio-val">$3.500</span>
+          </div>
+          <input type="range" class="fo-range" id="v-precio" min="2500" max="5500" step="100" value="3500" oninput="updateSim()">
+          <div style="display:flex;justify-content:space-between;" class="fo-hint"><span>$2.500</span><span>$5.500</span></div>
+        </div>
+
+        <div class="fo-sim-var">
+          <div class="fo-sim-var-header">
+            <span class="fo-sim-var-name">Costo unitario promedio</span>
+            <span class="fo-sim-var-value" id="v-costo-val">$1.200</span>
+          </div>
+          <input type="range" class="fo-range" id="v-costo" min="800" max="2500" step="50" value="1200" oninput="updateSim()">
+          <div style="display:flex;justify-content:space-between;" class="fo-hint"><span>$800</span><span>$2.500</span></div>
+        </div>
+
+        <div class="fo-sim-var">
+          <div class="fo-sim-var-header">
+            <span class="fo-sim-var-name">Volumen de ventas diario</span>
+            <span class="fo-sim-var-value" id="v-vol-val">68 uds/día</span>
+          </div>
+          <input type="range" class="fo-range" id="v-vol" min="20" max="150" step="1" value="68" oninput="updateSim()">
+          <div style="display:flex;justify-content:space-between;" class="fo-hint"><span>20 uds</span><span>150 uds</span></div>
+        </div>
+
+        <div class="fo-sim-var">
+          <div class="fo-sim-var-header">
+            <span class="fo-sim-var-name">Costos fijos mensuales</span>
+            <span class="fo-sim-var-value" id="v-fijos-val">$1.165.000</span>
+          </div>
+          <input type="range" class="fo-range" id="v-fijos" min="500000" max="3000000" step="50000" value="1165000" oninput="updateSim()">
+          <div style="display:flex;justify-content:space-between;" class="fo-hint"><span>$500K</span><span>$3.000K</span></div>
+        </div>
+
+        <div class="fo-sim-var">
+          <div class="fo-sim-var-header">
+            <span class="fo-sim-var-name">Días operativos por semana</span>
+            <span class="fo-sim-var-value" id="v-dias-val">6 días</span>
+          </div>
+          <input type="range" class="fo-range" id="v-dias" min="1" max="7" step="1" value="6" oninput="updateSim()">
+          <div style="display:flex;justify-content:space-between;" class="fo-hint"><span>1 día</span><span>7 días</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resultados -->
+    <div class="col-md-7">
+      <div class="fo-card" style="margin-bottom:1rem;">
+        <div class="fo-card-header">
+          <div class="fo-card-title">Comparativo de resultados</div>
+          <span class="fo-badge fo-badge-info" id="sim-badge">Simulando...</span>
+        </div>
+        <table class="fo-compare-table" style="width:100%;">
+          <thead>
+            <tr>
+              <th style="text-align:left;">Indicador</th>
+              <th class="current" style="text-align:right;">Situación actual</th>
+              <th class="simulated" style="text-align:right;">Escenario simulado</th>
+              <th style="text-align:right;">Variación</th>
+            </tr>
+          </thead>
+          <tbody id="compare-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- Conclusión automática -->
+      <div class="fo-card" id="conclusion-card" style="background:var(--fo-info-lt);border-color:var(--fo-surface-dark);">
+        <div style="font-size:.875rem;line-height:1.7;color:var(--fo-text);" id="conclusion-text">
+          Ajusta las variables para ver el impacto en tu negocio.
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Modal guardar escenario -->
+<div class="fo-modal-overlay hidden" id="modal-guardar">
+  <div class="fo-modal">
+    <div class="fo-modal-header">
+      <div class="fo-modal-title">Guardar escenario</div>
+      <button class="fo-close-btn" onclick="hideModal('modal-guardar')">✕</button>
+    </div>
+    <div class="fo-modal-body">
+      <div class="fo-form-group" style="margin-bottom:0;">
+        <label class="fo-label-text" for="esc-nombre">Nombre del escenario <span class="fo-required">*</span></label>
+        <input class="fo-input" type="text" id="esc-nombre" placeholder="Ej: Subir precio arepa + nuevos domingos">
+        <div class="fo-error-msg">Ingresa un nombre para el escenario.</div>
+      </div>
+    </div>
+    <div class="fo-modal-footer">
+      <button class="fo-btn fo-btn-ghost" onclick="hideModal('modal-guardar')">Cancelar</button>
+      <button class="fo-btn fo-btn-primary" onclick="confirmarGuardar()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/finop.js"></script>
+<script src="js/simulador.js"></script>
+</body></html>

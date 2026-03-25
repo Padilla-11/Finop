@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinOp — Análisis IA</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="css/finop.css" rel="stylesheet">
+  <link href="css/analisis.css" rel="stylesheet">
+</head>
+<body>
+<div id="sidebar-root"></div>
+<main class="fo-main">
+  <div class="fo-topbar">
+    <div><h1 class="fo-page-title">Análisis financiero con IA</h1><p class="fo-page-sub">Diagnóstico conversacional · Fritos y Fritos</p></div>
+    <div class="fo-topbar-actions" id="periodo-btns">
+      <button class="periodo-btn" onclick="setPeriodo(7,this)">7 días</button>
+      <button class="periodo-btn active" onclick="setPeriodo(30,this)">30 días</button>
+      <button class="periodo-btn" onclick="setPeriodo(90,this)">90 días</button>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <!-- Diagnóstico estructurado -->
+    <div class="col-md-6">
+      <div class="fo-card" style="height:100%;">
+        <div class="fo-card-header">
+          <div>
+            <div class="fo-card-title">Diagnóstico — últimos 30 días</div>
+            <div class="fo-card-subtitle" id="diag-fecha">Generado el 14 de marzo · 9:22 AM</div>
+          </div>
+          <button class="fo-btn fo-btn-outline fo-btn-sm" id="btn-generar" onclick="generarDiagnostico()">
+            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.43-4.52"/></svg>
+            Regenerar
+          </button>
+        </div>
+
+        <!-- Estado general -->
+        <div class="diag-section">
+          <div class="diag-section-title">Estado general del negocio</div>
+          <div class="fo-card" style="background:var(--fo-info-lt);border-color:var(--fo-surface-dark);padding:.875rem 1rem;" id="estado-general">
+            <div style="font-size:.875rem;line-height:1.7;color:var(--fo-text);">
+              En los últimos 30 días tu negocio operó <strong>12 de 22 días</strong> posibles, generando ingresos totales de <strong>$4.820.000</strong> con una utilidad neta acumulada de <strong>$1.240.000</strong>. El 75% de las jornadas fueron rentables. Tu margen promedio de 18.4% está por debajo del umbral recomendado del 20% para negocios de alimentos.
+            </div>
+          </div>
+        </div>
+
+        <!-- Problemas -->
+        <div class="diag-section">
+          <div class="diag-section-title">Problemas identificados (por impacto)</div>
+          <div id="problemas-list">
+            <div class="diag-item">
+              <div class="diag-num danger">1</div>
+              <div><strong>Margen por debajo del umbral</strong><br><span class="fo-small">Tu margen promedio (18.4%) está 1.6 puntos por debajo del 20% recomendado. Esto equivale a $77.000 menos de utilidad en el mes.</span></div>
+            </div>
+            <div class="diag-item">
+              <div class="diag-num warning">2</div>
+              <div><strong>Baja frecuencia operativa</strong><br><span class="fo-small">Solo operaste 12 de 22 días. Los 10 días sin jornada representan una pérdida potencial de ~$3.060.000 en ingresos.</span></div>
+            </div>
+            <div class="diag-item">
+              <div class="diag-num warning">3</div>
+              <div><strong>Gastos irregulares los miércoles</strong><br><span class="fo-small">Los miércoles tus gastos operativos son en promedio 38% más altos que el resto de la semana.</span></div>
+            </div>
+            <div class="diag-item">
+              <div class="diag-num danger">4</div>
+              <div><strong>Cartera sin cobrar</strong><br><span class="fo-small">$380.000 en cuentas pendientes, dos de ellas con más de 7 días sin pago.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recomendaciones -->
+        <div class="diag-section">
+          <div class="diag-section-title">Recomendaciones</div>
+          <div id="recomendaciones-list">
+            <div class="diag-item">
+              <div class="diag-num success">1</div>
+              <div><strong>Revisa el precio de la arepa de choclo</strong><br><span class="fo-small">Es tu producto más vendido con el margen más bajo (34%). Subir $500 el precio mejoraría el margen al 40% sin impacto significativo en ventas.</span></div>
+            </div>
+            <div class="diag-item">
+              <div class="diag-num success">2</div>
+              <div><strong>Cobra la cartera esta semana</strong><br><span class="fo-small">Contacta a Marco Rodríguez ($140.000) y Pedro Gómez ($220.000) antes del viernes.</span></div>
+            </div>
+            <div class="diag-item">
+              <div class="diag-num success">3</div>
+              <div><strong>Identifica los gastos del miércoles</strong><br><span class="fo-small">Revisa el historial de movimientos de los últimos 3 miércoles para encontrar el origen del gasto alto.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat conversacional -->
+    <div class="col-md-6">
+      <div class="fo-card" style="display:flex;flex-direction:column;height:calc(100vh - 10rem);">
+        <div class="fo-card-header">
+          <div>
+            <div class="fo-card-title">Pregúntale a FinOp IA</div>
+            <div class="fo-card-subtitle">Haz preguntas sobre tu negocio</div>
+          </div>
+          <div style="width:32px;height:32px;background:var(--fo-info-lt);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;">🤖</div>
+        </div>
+        <div id="chat-messages" style="flex:1;overflow-y:auto;padding:.25rem 0;" class="fo-chat-wrap"></div>
+        <div style="padding-top:.875rem;border-top:1px solid var(--fo-border-light);">
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.625rem;" id="sugerencias-wrap">
+            <button class="fo-btn fo-btn-ghost fo-btn-sm" onclick="sendSugerencia(this.textContent)">¿Qué días me conviene más operar?</button>
+            <button class="fo-btn fo-btn-ghost fo-btn-sm" onclick="sendSugerencia(this.textContent)">¿Cómo mejoro mi margen?</button>
+            <button class="fo-btn fo-btn-ghost fo-btn-sm" onclick="sendSugerencia(this.textContent)">¿Cuánto debo vender por día?</button>
+          </div>
+          <div style="display:flex;gap:.5rem;">
+            <input class="fo-input" type="text" id="chat-input" placeholder="Escribe tu pregunta..." onkeydown="if(event.key==='Enter')sendMsg()">
+            <button class="fo-btn fo-btn-primary" onclick="sendMsg()">
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/finop.js"></script>
+<script src="js/analisis.js"></script>
+</body></html>

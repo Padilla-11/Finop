@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinOp — Historial</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="css/finop.css" rel="stylesheet">
+</head>
+<body>
+<div id="sidebar-root"></div>
+<main class="fo-main">
+  <div class="fo-topbar">
+    <div><h1 class="fo-page-title">Historial de jornadas</h1><p class="fo-page-sub">Marzo 2025 · 22 días operativos configurados</p></div>
+    <div class="fo-topbar-actions">
+      <select class="fo-input fo-select" id="filtro-mes" style="width:auto;">
+        <option>Marzo 2025</option><option>Febrero 2025</option><option>Enero 2025</option>
+      </select>
+      <select class="fo-input fo-select" id="filtro-estado" style="width:auto;" onchange="filtrar()">
+        <option value="">Todos los estados</option>
+        <option value="rentable">Rentables</option>
+        <option value="perdida">Con pérdida</option>
+        <option value="no_opero">No operados</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- KPIs del mes -->
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+      <div class="fo-kpi"><div class="fo-kpi-label">Jornadas operadas</div><div class="fo-kpi-value">12</div><div class="fo-kpi-sub">de 14 días hábiles</div></div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="fo-kpi accent"><div class="fo-kpi-label">Días rentables</div><div class="fo-kpi-value" style="color:var(--fo-accent-dark);">9</div><div class="fo-kpi-sub">75% del total operado</div></div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="fo-kpi"><div class="fo-kpi-label">Ingreso promedio/día</div><div class="fo-kpi-value">$306.000</div><div class="fo-kpi-sub">días operativos</div></div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="fo-kpi warning"><div class="fo-kpi-label">Margen promedio</div><div class="fo-kpi-value">18.4%</div><div class="fo-kpi-sub">días con conteo</div></div>
+    </div>
+  </div>
+
+  <!-- Tabla -->
+  <div class="fo-card" style="padding:0;">
+    <div style="padding:1rem 1.25rem;border-bottom:1px solid var(--fo-border-light);display:flex;align-items:center;justify-content:space-between;">
+      <div class="fo-card-title">Detalle por jornada</div>
+      <button class="fo-btn fo-btn-ghost fo-btn-sm">
+        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Exportar
+      </button>
+    </div>
+    <div class="fo-table-wrap" style="border:none;border-radius:0;box-shadow:none;">
+      <table class="fo-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Día</th>
+            <th>Ingresos</th>
+            <th>Utilidad neta</th>
+            <th>Margen</th>
+            <th>Equilibrio</th>
+            <th>Estado</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="historial-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/finop.js"></script>
+<script src="js/historial.js"></script>
+</body></html>

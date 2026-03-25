@@ -1,0 +1,46 @@
+.action-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .75rem;
+  margin-bottom: 1.5rem;
+}
+.action-card {
+  background: var(--fo-white);
+  border: 1.5px solid var(--fo-border-light);
+  border-radius: var(--fo-radius-lg);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .5rem;
+  cursor: pointer;
+  transition: var(--fo-transition);
+}
+.action-card:hover {
+  border-color: var(--fo-primary);
+  box-shadow: var(--fo-shadow);
+  transform: translateY(-1px);
+}
+.action-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+.action-label { font-size: .875rem; font-weight: 600; color: var(--fo-text); }
+.action-sub { font-size: .775rem; color: var(--fo-text-muted); }
+.fab { position: fixed; bottom: 2rem; right: 2rem; z-index: 50; }
+.caja-indicator { display: flex; gap: 1rem; flex-wrap: wrap; }
+.caja-item { background: var(--fo-surface); border-radius: var(--fo-radius); padding: .5rem .875rem; }
+.caja-item-label {
+  font-size: .7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--fo-text-muted);
+  margin-bottom: .2rem;
+}
+.caja-item-value { font-family: var(--fo-font-mono); font-size: .95rem; font-weight: 500; color: var(--fo-primary); }

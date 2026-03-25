@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinOp — Cierre de jornada</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="css/finop.css" rel="stylesheet">
+  <link href="css/cierre.css" rel="stylesheet">
+</head>
+<body>
+
+<div id="sidebar-root"></div>
+
+<main class="fo-main">
+
+  <!-- Topbar -->
+  <div class="fo-topbar">
+    <div>
+      <h1 class="fo-page-title">Cierre de jornada</h1>
+      <p class="fo-page-sub" id="topbar-meta">Cargando...</p>
+    </div>
+    <a href="jornada-activa.html" class="fo-btn fo-btn-ghost fo-btn-sm">← Volver a la jornada</a>
+  </div>
+
+  <!-- Indicador de pasos -->
+  <div class="step-card">
+    <div class="fo-steps">
+      <div class="fo-step active" id="ste-1">
+        <div class="fo-step-circle" id="sc-1">1</div>
+        <span class="fo-step-label">Conteo</span>
+        <div class="fo-step-line" id="sl-1"></div>
+      </div>
+      <div class="fo-step" id="ste-2">
+        <div class="fo-step-circle" id="sc-2">2</div>
+        <span class="fo-step-label">Caja final</span>
+        <div class="fo-step-line" id="sl-2"></div>
+      </div>
+      <div class="fo-step" id="ste-3">
+        <div class="fo-step-circle" id="sc-3">3</div>
+        <span class="fo-step-label">Validación</span>
+        <div class="fo-step-line" id="sl-3"></div>
+      </div>
+      <div class="fo-step" id="ste-4">
+        <div class="fo-step-circle" id="sc-4">4</div>
+        <span class="fo-step-label">Resumen</span>
+        <div class="fo-step-line" id="sl-4"></div>
+      </div>
+      <div class="fo-step" id="ste-5">
+        <div class="fo-step-circle" id="sc-5">5</div>
+        <span class="fo-step-label">Confirmar</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PASO 1 — Conteo de productos
+  ════════════════════════════════════════ -->
+  <div class="paso visible" id="paso-1">
+    <div class="row g-3">
+      <div class="col-md-8">
+        <div class="fo-card">
+          <div class="fo-card-header">
+            <div>
+              <div class="fo-card-title">Conteo de productos vendidos</div>
+              <div class="fo-card-subtitle">Ingresa las unidades vendidas hoy para calcular el margen exacto</div>
+            </div>
+            <span class="fo-badge fo-badge-info">Recomendado</span>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="fo-table" style="min-width:480px;">
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th>Precio</th>
+                  <th>Costo</th>
+                  <th style="text-align:center;">Unidades</th>
+                  <th style="text-align:right;">Subtotal</th>
+                </tr>
+              </thead>
+              <tbody id="conteo-tbody"></tbody>
+              <tfoot>
+                <tr style="background:var(--fo-surface);">
+                  <td colspan="3" style="font-weight:600;font-size:.875rem;padding:.875rem 1rem;">
+                    Total estimado del día
+                  </td>
+                  <td style="font-family:var(--fo-font-mono);font-weight:600;text-align:center;padding:.875rem 1rem;"
+                      id="tfoot-uds">0 uds</td>
+                  <td style="font-family:var(--fo-font-mono);font-weight:700;color:var(--fo-primary);text-align:right;padding:.875rem 1rem;font-size:1rem;"
+                      id="tfoot-total">$0</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <!-- Vista previa en tiempo real -->
+        <div class="fo-card" style="margin-bottom:.75rem;">
+          <div class="fo-label" style="margin-bottom:.5rem;">Vista previa de ingresos</div>
+          <div id="preview-ingresos" class="fo-amount" style="font-size:1.35rem;">$0</div>
+          <hr class="fo-divider">
+          <div id="preview-productos" class="fo-small" style="color:var(--fo-text-muted);line-height:1.7;">
+            Ingresa unidades para ver el detalle.
+          </div>
+        </div>
+
+        <div class="fo-card">
+          <div style="font-size:.85rem;font-weight:500;margin-bottom:.5rem;">¿Por qué hacer el conteo?</div>
+          <div class="fo-small" style="color:var(--fo-text-secondary);line-height:1.75;margin-bottom:.875rem;">
+            Permite calcular el <strong>margen exacto</strong>, el costo real de lo vendido y validar si la caja cuadra con las ventas.
+          </div>
+          <button class="fo-btn fo-btn-ghost fo-btn-sm fo-btn-block" id="btn-omitir">
+            Omitir este paso
+          </button>
+          <div class="fo-hint text-center" style="margin-top:.375rem;">Los indicadores serán estimados</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PASO 2 — Caja final
+  ════════════════════════════════════════ -->
+  <div class="paso" id="paso-2">
+    <div class="row justify-content-center">
+      <div class="col-md-5">
+        <div class="fo-card" style="padding:2.5rem 2rem;text-align:center;">
+          <div style="font-size:3rem;margin-bottom:1rem;">💰</div>
+          <div class="fo-subheading" style="margin-bottom:.375rem;">¿Cuánto hay en caja ahora?</div>
+          <div class="fo-muted" style="margin-bottom:1.75rem;">
+            Cuenta el efectivo físico antes de cerrar la jornada
+          </div>
+
+          <div class="caja-big-wrap" id="caja-big-wrap">
+            <div class="caja-big-prefix">$</div>
+            <input
+              type="number"
+              id="caja-final-input"
+              placeholder="0"
+              min="0"
+              step="1000"
+              autocomplete="off"
+            >
+          </div>
+          <div id="caja-error-msg">Ingresa el valor de caja para continuar.</div>
+
+          <div style="margin-top:1.25rem;display:flex;flex-direction:column;gap:.375rem;">
+            <div class="fo-hint">Caja inicial: <strong id="hint-caja-ini">$150.000</strong></div>
+            <div class="fo-hint">Caja esperada según movimientos: <strong id="hint-caja-esp" style="color:var(--fo-primary);">calculando...</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PASO 3 — Validación de caja
+  ════════════════════════════════════════ -->
+  <div class="paso" id="paso-3">
+    <div class="row g-3 justify-content-center">
+      <div class="col-lg-9">
+        <div class="fo-card">
+          <div class="fo-card-header">
+            <div class="fo-card-title">Reconciliación de caja</div>
+            <span class="fo-badge" id="val-badge">—</span>
+          </div>
+          <div class="row g-3">
+            <!-- Desglose caja esperada -->
+            <div class="col-md-5">
+              <div style="background:var(--fo-surface);border-radius:var(--fo-radius-lg);padding:1.25rem;height:100%;">
+                <div class="fo-label" style="margin-bottom:.5rem;">Caja esperada</div>
+                <div class="fo-amount" id="val-esperada" style="margin-bottom:.875rem;">$0</div>
+                <div style="height:1px;background:var(--fo-border);margin:.625rem 0;"></div>
+                <div id="val-desglose"></div>
+              </div>
+            </div>
+            <!-- Caja registrada y diferencia -->
+            <div class="col-md-7">
+              <div style="background:var(--fo-surface);border-radius:var(--fo-radius-lg);padding:1.125rem;text-align:center;margin-bottom:.75rem;">
+                <div class="fo-label" style="margin-bottom:.375rem;">Caja que contaste</div>
+                <div class="fo-amount" id="val-registrada">$0</div>
+              </div>
+              <div class="diff-box" id="diff-box">
+                <div class="fo-label" style="margin-bottom:.375rem;" id="diff-lbl">Diferencia</div>
+                <div class="diff-val" id="diff-valor">$0</div>
+                <div style="font-size:.775rem;margin-top:.375rem;" id="diff-hint"></div>
+              </div>
+              <div class="fo-alert" id="val-alert" style="margin-top:.75rem;">
+                <span class="fo-alert-icon" id="val-icon">ℹ️</span>
+                <div class="fo-alert-text fo-small" id="val-msg"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PASO 4 — Resumen financiero
+  ════════════════════════════════════════ -->
+  <div class="paso" id="paso-4">
+    <div class="row g-3">
+      <!-- Estado de resultados -->
+      <div class="col-md-6">
+        <div class="fo-card">
+          <div class="fo-card-header">
+            <div class="fo-card-title">Estado de resultados del día</div>
+            <span class="fo-badge" id="r-precision-badge">—</span>
+          </div>
+
+          <div class="fo-summary-row">
+            <span class="s-label">Ingresos operativos</span>
+            <span class="s-value" id="r-ingresos">—</span>
+          </div>
+          <div class="fo-summary-row s-neg">
+            <span class="s-label">Costo de lo vendido</span>
+            <span class="s-value" id="r-costo">—</span>
+          </div>
+          <div class="fo-summary-row s-pos highlight">
+            <span class="s-label">Utilidad bruta</span>
+            <span class="s-value" id="r-util-bruta">—</span>
+          </div>
+
+          <hr class="fo-divider" style="margin:.5rem 0;">
+
+          <div class="fo-summary-row s-neg">
+            <span class="s-label">Gastos de la jornada</span>
+            <span class="s-value" id="r-gastos">—</span>
+          </div>
+          <div class="fo-summary-row s-neg">
+            <span class="s-label">Costos fijos del día</span>
+            <span class="s-value" id="r-fijos">—</span>
+          </div>
+          <div class="fo-summary-row s-total" id="r-neta-row">
+            <span class="s-label">Utilidad neta</span>
+            <span class="s-value" id="r-neta">—</span>
+          </div>
+
+          <!-- Resultado del día -->
+          <div class="fo-day-result" id="result-card" style="margin-top:1rem;">
+            <span class="fo-day-result-icon" id="res-icon">—</span>
+            <div>
+              <div class="fo-day-result-title" id="res-title">Calculando...</div>
+              <div class="fo-day-result-sub"  id="res-sub"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Indicadores + productos -->
+      <div class="col-md-6">
+        <div class="fo-card" style="margin-bottom:1rem;">
+          <div class="fo-card-header">
+            <div class="fo-card-title">Indicadores del día</div>
+          </div>
+          <div class="fo-summary-row">
+            <span class="s-label">Margen de ganancia</span>
+            <span class="s-value" id="r-margen">—</span>
+          </div>
+          <div class="fo-summary-row">
+            <span class="s-label">Punto de equilibrio diario</span>
+            <span class="s-value" id="r-equilibrio">—</span>
+          </div>
+          <div class="fo-summary-row" style="border:none;">
+            <span class="s-label">Diferencia de caja</span>
+            <span class="s-value" id="r-diff">—</span>
+          </div>
+          <div style="margin-top:.875rem;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.375rem;">
+              <div class="fo-label">Margen del día</div>
+              <div class="fo-label" style="color:var(--fo-text-muted);">Objetivo 20%</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:.75rem;">
+              <div class="fo-progress-wrap" style="flex:1;">
+                <div class="fo-progress-bar" id="margen-bar" style="width:0%;"></div>
+              </div>
+              <span class="fo-mono" id="margen-bar-lbl" style="min-width:42px;text-align:right;">0%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="fo-card">
+          <div class="fo-card-header">
+            <div class="fo-card-title">Detalle de ventas</div>
+          </div>
+          <div id="r-detalle-ventas"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PASO 5 — Confirmación
+  ════════════════════════════════════════ -->
+  <div class="paso" id="paso-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="fo-card" style="padding:2rem;text-align:center;">
+          <div style="font-size:3rem;margin-bottom:1rem;">📋</div>
+          <div class="fo-subheading" style="margin-bottom:.375rem;">¿Confirmar el cierre?</div>
+          <div class="fo-muted" style="margin-bottom:1.75rem;">
+            Una vez cerrada la jornada solo puede modificarse con una justificación registrada en auditoría.
+          </div>
+
+          <!-- Resumen ejecutivo -->
+          <div class="fo-card" style="background:var(--fo-surface);border:none;text-align:left;margin-bottom:1.25rem;">
+            <div class="fo-summary-row">
+              <span class="s-label">Fecha de jornada</span>
+              <span class="s-value" id="cf-fecha">—</span>
+            </div>
+            <div class="fo-summary-row">
+              <span class="s-label">Ingresos del día</span>
+              <span class="s-value" id="cf-ingresos">—</span>
+            </div>
+            <div class="fo-summary-row">
+              <span class="s-label">Utilidad neta</span>
+              <span class="s-value" id="cf-neta">—</span>
+            </div>
+            <div class="fo-summary-row">
+              <span class="s-label">Margen de ganancia</span>
+              <span class="s-value" id="cf-margen">—</span>
+            </div>
+            <div class="fo-summary-row">
+              <span class="s-label">Diferencia de caja</span>
+              <span class="s-value" id="cf-diff">—</span>
+            </div>
+            <div class="fo-summary-row" style="border:none;">
+              <span class="s-label">Estado del día</span>
+              <span id="cf-estado">—</span>
+            </div>
+          </div>
+
+          <!-- Alerta diferencia alta (solo se muestra si aplica) -->
+          <div id="cf-diff-alert" class="fo-alert warning" style="text-align:left;margin-bottom:1.25rem;display:none;">
+            <span class="fo-alert-icon">⚠️</span>
+            <div class="fo-alert-text fo-small" id="cf-diff-alert-text"></div>
+          </div>
+
+          <!-- Alerta conteo omitido -->
+          <div id="cf-conteo-alert" class="fo-alert info" style="text-align:left;margin-bottom:1.5rem;display:none;">
+            <span class="fo-alert-icon">ℹ️</span>
+            <div class="fo-alert-text fo-small">
+              El conteo de productos fue omitido. Los ingresos y márgenes registrados son <strong>estimados</strong>.
+            </div>
+          </div>
+
+          <div style="display:flex;gap:.75rem;justify-content:center;">
+            <button class="fo-btn fo-btn-ghost" onclick="goToPaso(4)">← Revisar resumen</button>
+            <button class="fo-btn fo-btn-accent fo-btn-lg" id="btn-confirmar">
+              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Confirmar cierre
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navegación -->
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1.75rem;padding-top:1.25rem;border-top:1px solid var(--fo-border-light);">
+    <button class="fo-btn fo-btn-ghost" id="btn-anterior" style="visibility:hidden;">← Anterior</button>
+    <button class="fo-btn fo-btn-primary" id="btn-siguiente">Siguiente →</button>
+  </div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/finop.js"></script>
+<script src="js/cierre.js"></script>
+</body>
+</html>
